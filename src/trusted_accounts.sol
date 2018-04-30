@@ -191,6 +191,14 @@ contract TrustedAccounts {
     }
 
     /**
+     * @dev Get number of accounts trusted by sender.
+     * @return Number of accounts trusted by sender.
+     */
+    function getTrustedCount() external view returns (uint) {
+        return accountTrustedAccountList[msg.sender].length;
+    }
+
+    /**
      * @dev Get all accounts trusted by sender.
      * @return All accounts trusted by sender.
      */
@@ -199,7 +207,15 @@ contract TrustedAccounts {
     }
 
     /**
-     * @dev Get all accounts trusted by specific account.
+     * @dev Get number of accounts trusted by account.
+     * @return Number of accounts trusted by account.
+     */
+    function getTrustedCountByAccount(address account) external view returns (uint) {
+        return accountTrustedAccountList[account].length;
+    }
+
+    /**
+     * @dev Get all accounts trusted by account.
      * @param account Account to get accounts it trusts.
      * @return All accounts trusted by account.
      */

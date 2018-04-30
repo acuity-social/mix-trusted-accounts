@@ -30,12 +30,16 @@ contract TrustedAccountsTest is DSTest {
 
     function testTrustAccount() public {
         trustedAccounts.trustAccount(0x1234);
+        assertEq(trustedAccounts.getTrustedCount(), 1);
         assertTrue(trustedAccounts.getIsTrusted(0x1234));
         trustedAccounts.trustAccount(0x2345);
+        assertEq(trustedAccounts.getTrustedCount(), 2);
         assertTrue(trustedAccounts.getIsTrusted(0x2345));
         trustedAccounts.trustAccount(0x4567);
+        assertEq(trustedAccounts.getTrustedCount(), 3);
         assertTrue(trustedAccounts.getIsTrusted(0x4567));
         trustedAccounts.trustAccount(0x5678);
+        assertEq(trustedAccounts.getTrustedCount(), 4);
         assertTrue(trustedAccounts.getIsTrusted(0x5678));
     }
 
@@ -55,24 +59,28 @@ contract TrustedAccountsTest is DSTest {
         trustedAccounts.trustAccount(0x5678);
 
         trustedAccounts.untrustAccount(0x2345);
+        assertEq(trustedAccounts.getTrustedCount(), 3);
         assertTrue(trustedAccounts.getIsTrusted(0x1234));
         assertTrue(!trustedAccounts.getIsTrusted(0x2345));
         assertTrue(trustedAccounts.getIsTrusted(0x4567));
         assertTrue(trustedAccounts.getIsTrusted(0x5678));
 
         trustedAccounts.untrustAccount(0x5678);
+        assertEq(trustedAccounts.getTrustedCount(), 2);
         assertTrue(trustedAccounts.getIsTrusted(0x1234));
         assertTrue(!trustedAccounts.getIsTrusted(0x2345));
         assertTrue(trustedAccounts.getIsTrusted(0x4567));
         assertTrue(!trustedAccounts.getIsTrusted(0x5678));
 
         trustedAccounts.untrustAccount(0x1234);
+        assertEq(trustedAccounts.getTrustedCount(), 1);
         assertTrue(!trustedAccounts.getIsTrusted(0x1234));
         assertTrue(!trustedAccounts.getIsTrusted(0x2345));
         assertTrue(trustedAccounts.getIsTrusted(0x4567));
         assertTrue(!trustedAccounts.getIsTrusted(0x5678));
 
         trustedAccounts.untrustAccount(0x4567);
+        assertEq(trustedAccounts.getTrustedCount(), 0);
         assertTrue(!trustedAccounts.getIsTrusted(0x1234));
         assertTrue(!trustedAccounts.getIsTrusted(0x2345));
         assertTrue(!trustedAccounts.getIsTrusted(0x4567));
