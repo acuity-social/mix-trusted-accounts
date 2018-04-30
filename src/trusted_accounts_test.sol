@@ -15,10 +15,12 @@ contract TrustedAccountsTest is DSTest {
 
     TrustedAccounts trustedAccounts;
     TrustedAccountsProxy trustedAccountsProxy;
+    TrustedAccountsProxy trustedAccountsProxy2;
 
     function setUp() public {
         trustedAccounts = new TrustedAccounts();
         trustedAccountsProxy = new TrustedAccountsProxy(trustedAccounts);
+        trustedAccountsProxy2 = new TrustedAccountsProxy(trustedAccounts);
     }
 
     function testControlCantTrustTrusted() public {
@@ -117,6 +119,29 @@ contract TrustedAccountsTest is DSTest {
         assertTrue(!trustedAccounts.getIsTrustedDeep(0x2345));
         assertTrue(!trustedAccounts.getIsTrustedDeep(0x3456));
         assertTrue(!trustedAccounts.getIsTrustedDeep(0x4567));
+    }
+
+    function testGetIsTrustedDeepByAccount() public {
+        trustedAccountsProxy.trustAccount(0x1234);
+        trustedAccountsProxy.trustAccount(0x2345);
+        trustedAccountsProxy.trustAccount(0x3456);
+        trustedAccountsProxy.trustAccount(0x4567);
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
+
+        trustedAccountsProxy2.trustAccount(trustedAccountsProxy);
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
+
+        trustedAccountsProxy2.untrustAccount(trustedAccountsProxy);
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
     }
 
 }

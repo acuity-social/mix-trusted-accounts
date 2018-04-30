@@ -169,7 +169,7 @@ contract TrustedAccounts {
             return true;
         }
         // Check all the accounts trusted by account.
-        address[] storage trustedList = accountTrustedAccountList[msg.sender];
+        address[] storage trustedList = accountTrustedAccountList[account];
         for (uint i = 0; i < trustedList.length; i++) {
             if (accountTrustedAccount[trustedList[i]][accountToCheck]) {
                 return true;
