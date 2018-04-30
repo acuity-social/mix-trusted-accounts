@@ -67,15 +67,20 @@ contract TrustedAccounts {
      * @dev Unrecord the sender as trusting an account.
      * @param account Account to not be trusted by sender.
      */
-    function unTrustAccount(address account) external isTrusted(account) {
+    function untrustAccount(address account) external isTrusted(account) {
         // Record the sender as not trusting this account.
         delete accountTrustedAccount[msg.sender][account];
         // Find the account in the senders list of trusted accounts.
         address[] storage trustedList = accountTrustedAccountList[msg.sender];
         for (uint i = 0; i < trustedList.length; i++) {
             if (trustedList[i] == account) {
-                // Overwrite the account to be removed with the last account.
-                trustedList[i] = trustedList[--trustedList.length];
+                // Check if this is not the only trusted account.
+                if (trustedList.length != 1) {
+                  // Overwrite the account with the last account.
+                  trustedList[i] = trustedList[trustedList.length - 1];
+                }
+                // Remove the last account.
+                trustedList.length--;
                 break;
             }
         }
