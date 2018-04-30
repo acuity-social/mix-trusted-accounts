@@ -3,6 +3,7 @@ pragma solidity ^0.4.23;
 import "ds-test/test.sol";
 
 import "./trusted_accounts.sol";
+import "./trusted_accounts_proxy.sol";
 
 
 /**
@@ -13,9 +14,11 @@ import "./trusted_accounts.sol";
 contract TrustedAccountsTest is DSTest {
 
     TrustedAccounts trustedAccounts;
+    TrustedAccountsProxy trustedAccountsProxy;
 
     function setUp() public {
         trustedAccounts = new TrustedAccounts();
+        trustedAccountsProxy = new TrustedAccountsProxy(trustedAccounts);
     }
 
     function testControlCantTrustTrusted() public {
@@ -85,6 +88,12 @@ contract TrustedAccountsTest is DSTest {
         assertTrue(!trustedAccounts.getIsTrusted(0x2345));
         assertTrue(!trustedAccounts.getIsTrusted(0x4567));
         assertTrue(!trustedAccounts.getIsTrusted(0x5678));
+    }
+
+    function testGetIsTrustedByAccount() public {
+        trustedAccountsProxy.trustAccount(0x1234);
+        assertTrue(!trustedAccounts.getIsTrustedByAccount(msg.sender, 0x1234));
+        assertTrue(trustedAccounts.getIsTrustedByAccount(trustedAccountsProxy, 0x1234));
     }
 
 }
