@@ -140,7 +140,7 @@ contract TrustedAccounts {
         // Check all the accounts trusted by sender.
         address[] storage trustedList = accountTrustedAccountList[msg.sender];
         for (uint i = 0; i < trustedList.length; i++) {
-            if (trustedList[i] == accountToCheck) {
+            if (accountTrustedAccount[trustedList[i]][accountToCheck]) {
                 return true;
             }
         }
@@ -171,7 +171,7 @@ contract TrustedAccounts {
         // Check all the accounts trusted by account.
         address[] storage trustedList = accountTrustedAccountList[msg.sender];
         for (uint i = 0; i < trustedList.length; i++) {
-            if (trustedList[i] == accountToCheck) {
+            if (accountTrustedAccount[trustedList[i]][accountToCheck]) {
                 return true;
             }
         }

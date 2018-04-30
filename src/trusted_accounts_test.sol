@@ -96,4 +96,27 @@ contract TrustedAccountsTest is DSTest {
         assertTrue(trustedAccounts.getIsTrustedByAccount(trustedAccountsProxy, 0x1234));
     }
 
+    function testGetIsTrustedDeep() public {
+        trustedAccountsProxy.trustAccount(0x1234);
+        trustedAccountsProxy.trustAccount(0x2345);
+        trustedAccountsProxy.trustAccount(0x3456);
+        trustedAccountsProxy.trustAccount(0x4567);
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x1234));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x2345));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x3456));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x4567));
+
+        trustedAccounts.trustAccount(trustedAccountsProxy);
+        assertTrue(trustedAccounts.getIsTrustedDeep(0x1234));
+        assertTrue(trustedAccounts.getIsTrustedDeep(0x2345));
+        assertTrue(trustedAccounts.getIsTrustedDeep(0x3456));
+        assertTrue(trustedAccounts.getIsTrustedDeep(0x4567));
+
+        trustedAccounts.untrustAccount(trustedAccountsProxy);
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x1234));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x2345));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x3456));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(0x4567));
+    }
+
 }
