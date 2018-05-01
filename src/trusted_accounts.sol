@@ -28,9 +28,9 @@ contract TrustedAccounts {
     /**
      * @dev An account now does not trust another account.
      * @param account Account that no longer trusts another account.
-     * @param trusted Account no longer being trusted.
+     * @param untrusted Account no longer being trusted.
      */
-    event UntrustAccount(address indexed account, address indexed trusted);
+    event UntrustAccount(address indexed account, address indexed untrusted);
 
     /**
      * @dev Revert if the account is not trusted by the sender.
