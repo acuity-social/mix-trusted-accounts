@@ -23,14 +23,14 @@ contract TrustedAccounts {
      * @param account Account that now trusts another account.
      * @param trusted Account being trusted.
      */
-    event TrustAccount(address account, address trusted);
+    event TrustAccount(address indexed account, address indexed trusted);
 
     /**
      * @dev An account now does not trust another account.
      * @param account Account that no longer trusts another account.
      * @param trusted Account no longer being trusted.
      */
-    event UntrustAccount(address account, address trusted);
+    event UntrustAccount(address indexed account, address indexed trusted);
 
     /**
      * @dev Revert if the account is not trusted by the sender.
