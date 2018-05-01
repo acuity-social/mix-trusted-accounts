@@ -74,8 +74,8 @@ contract TrustedAccounts {
         address[] storage trustedList = accountTrustedAccountList[msg.sender];
         for (uint i = 0; i < trustedList.length; i++) {
             if (trustedList[i] == account) {
-                // Check if this is not the only trusted account.
-                if (trustedList.length != 1) {
+                // Check if this is not the last account.
+                if (i != trustedList.length - 1) {
                   // Overwrite the account with the last account.
                   trustedList[i] = trustedList[trustedList.length - 1];
                 }
