@@ -102,7 +102,7 @@ contract TrustedAccounts {
      * @param account Account to be checked if it trusts another account.
      * @param accountToCheck Account to be checked if it is trusted.
      */
-    function getIsTrustedByAccount(address account, address accountToCheck) external view returns (bool) {
+    function getIsTrustedByAccount(address account, address accountToCheck) public view returns (bool) {
         return accountTrustedAccount[account][accountToCheck];
     }
 
@@ -250,6 +250,45 @@ contract TrustedAccounts {
      */
     function getAllTrustedByAccount(address account) external view returns (address[]) {
         return accountTrustedAccountList[account];
+    }
+
+    /**
+     * @dev Get a list of trusted accounts that trust an account.
+     * @param account Account to be checked who it trusts that trusts accountToCheck.
+     * @param accountToCheck Account to check who trusts it.
+     * @return List of accounts that are trusted by account and trust accountToCheck.
+     */
+    function getTrustedThatTrustAccountByAccount(address account, address accountToCheck) public view returns (address[] results) {
+        uint trustedCount = accountTrustedAccountList[account].length;
+        bool[] memory trustedTrust = new bool[](trustedCount);
+        uint trustedTrustCount = 0;
+        // Check which accounts that account trusts trust accountToCheck.
+        for (uint i = 0; i < trustedCount; i++) {
+            if (getIsTrustedByAccount(accountTrustedAccountList[account][i], accountToCheck)) {
+                trustedTrust[i] = true;
+                trustedTrustCount++;
+            }
+            else {
+                trustedTrust[i] = false;
+            }
+        }
+        // Store the results.
+        results = new address[](trustedTrustCount);
+        uint j = 0;
+        for (i = 0; i < trustedCount; i++) {
+            if (trustedTrust[i]) {
+                results[j++] = accountTrustedAccountList[account][i];
+            }
+        }
+    }
+
+    /**
+     * @dev Get a list of trusted accounts that trust an account.
+     * @param accountToCheck Account to check who trusts it.
+     * @return List of accounts that are trusted by sender and trust accountToCheck.
+     */
+    function getTrustedThatTrustAccount(address accountToCheck) external view returns (address[] results) {
+        results = getTrustedThatTrustAccountByAccount(msg.sender, accountToCheck);
     }
 
 }
