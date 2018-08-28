@@ -23,6 +23,14 @@ contract TrustedAccountsTest is DSTest {
         trustedAccountsProxy2 = new TrustedAccountsProxy(trustedAccounts);
     }
 
+    function testControlCantTrustSelf() public {
+        trustedAccounts.trustAccount(0x1234);
+    }
+
+    function testFailCantTrustSelf() public {
+        trustedAccounts.trustAccount(this);
+    }
+
     function testControlCantTrustTrusted() public {
         trustedAccounts.trustAccount(0x1234);
         trustedAccounts.trustAccount(0x2345);

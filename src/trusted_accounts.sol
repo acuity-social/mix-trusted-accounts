@@ -42,6 +42,15 @@ contract TrustedAccounts {
     }
 
     /**
+     * @dev Revert if the account is the sender.
+     * @param account Account that must not be sender.
+     */
+    modifier isNotSender(address account) {
+        require (account != msg.sender);
+        _;
+    }
+
+    /**
      * @dev Revert if the account is trusted by the sender.
      * @param account Account that must not be trusted.
      */
@@ -54,7 +63,7 @@ contract TrustedAccounts {
      * @dev Record the sender as trusting an account.
      * @param account Account to be trusted by sender.
      */
-    function trustAccount(address account) external isNotTrusted(account) {
+    function trustAccount(address account) external isNotSender(account) isNotTrusted(account) {
         // Record the sender as trusting this account.
         accountTrustedAccount[msg.sender][account] = true;
         // Add the account to the list of accounts the sender trusts.
