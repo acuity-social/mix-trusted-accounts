@@ -27,36 +27,52 @@ contract TrustedAccountsProxy {
         trustedAccounts.untrustAccount(account);
     }
 
+    function getIsTrustedByAccount(address account, address accountToCheck) external view returns (bool) {
+        return trustedAccounts.getIsTrustedByAccount(account, accountToCheck);
+    }
+
     function getIsTrusted(address accountToCheck) external view returns (bool) {
         return trustedAccounts.getIsTrusted(accountToCheck);
     }
 /*
+    function getIsTrustedByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+        results = trustedAccounts.getIsTrustedByAccountMultiple(account, accountsToCheck);
+    }
+
     function getIsTrustedMultiple(address[] accountsToCheck) external view returns (bool[] results) {
-        return trustedAccounts.getIsTrustedMultiple(accountsToCheck);
+        results = trustedAccounts.getIsTrustedMultiple(accountsToCheck);
     }
 */
-    function getIsTrustedByAccount(address account, address accountToCheck) external view returns (bool) {
-        return trustedAccounts.getIsTrustedByAccount(account, accountToCheck);
+    function getIsTrustedOnlyDeepByAccount(address account, address accountToCheck) public view returns (bool) {
+        return trustedAccounts.getIsTrustedOnlyDeepByAccount(account, accountToCheck);
+    }
+
+    function getIsTrustedOnlyDeep(address accountToCheck) external view returns (bool) {
+        return trustedAccounts.getIsTrustedOnlyDeep(accountToCheck);
     }
 /*
-    function getIsTrustedByAccountMultiple(address account, address[] accountsToCheck) external view returns (bool[] results) {
-        return trustedAccounts.getIsTrustedByAccountMultiple(account, accountsToCheck);
+    function getIsTrustedOnlyDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+        results = trustedAccounts.getIsTrustedOnlyDeepByAccountMultiple(account, accountsToCheck);
+    }
+
+    function getIsTrustedOnlyDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
+        results = trustedAccounts.getIsTrustedOnlyDeepMultiple(accountsToCheck);
     }
 */
+    function getIsTrustedDeepByAccount(address account, address accountToCheck) public view returns (bool) {
+        return trustedAccounts.getIsTrustedDeepByAccount(account, accountToCheck);
+    }
+
     function getIsTrustedDeep(address accountToCheck) external view returns (bool) {
         return trustedAccounts.getIsTrustedDeep(accountToCheck);
     }
 /*
+    function getIsTrustedDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+        results = trustedAccounts.getIsTrustedDeepByAccountMultiple(account, accountsToCheck);
+    }
+
     function getIsTrustedDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
-        return trustedAccounts.getIsTrustedDeepMultiple(accountsToCheck);
-    }
-*/
-    function getIsTrustedDeepByAccount(address account, address accountToCheck) external view returns (bool) {
-        return trustedAccounts.getIsTrustedDeepByAccount(account, accountToCheck);
-    }
-/*
-    function getIsTrustedDeepByAccountMultiple(address account, address[] accountsToCheck) external view returns (bool[] results) {
-        return trustedAccounts.getIsTrustedDeepByAccountMultiple(account, accountsToCheck);
+        results = trustedAccounts.getIsTrustedDeepMultiple(accountsToCheck);
     }
 */
     function getTrustedCount() external view returns (uint) {
