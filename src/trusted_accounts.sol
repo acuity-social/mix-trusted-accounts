@@ -101,6 +101,7 @@ contract TrustedAccounts {
      * @dev Check if an account trusts another account.
      * @param account Account to be checked if it trusts another account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if account trusts accountToCheck.
      */
     function getIsTrustedByAccount(address account, address accountToCheck) public view returns (bool) {
         return accountTrustedAccount[account][accountToCheck];
@@ -109,6 +110,7 @@ contract TrustedAccounts {
     /**
      * @dev Check if the sender trusts an account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if sender trusts accountToCheck.
      */
     function getIsTrusted(address accountToCheck) external view returns (bool) {
         return accountTrustedAccount[msg.sender][accountToCheck];
@@ -118,6 +120,7 @@ contract TrustedAccounts {
      * @dev Check if an account trusts multiple accounts.
      * @param account Account to be checked if it trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
         results = new bool[](accountsToCheck.length);
@@ -129,15 +132,17 @@ contract TrustedAccounts {
     /**
      * @dev Check if the sender trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedMultiple(address[] accountsToCheck) external view returns (bool[] results) {
         results = getIsTrustedByAccountMultiple(msg.sender, accountsToCheck);
     }
 
     /**
-     * @dev Check only deep if the sender trusts an account.
+     * @dev Check only deep if an account trusts another account.
      * @param account Account to be checked if it trusts an account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if account trusts accountToCheck.
      */
     function getIsTrustedOnlyDeepByAccount(address account, address accountToCheck) public view returns (bool) {
         // Check all the accounts trusted by account.
@@ -153,6 +158,7 @@ contract TrustedAccounts {
     /**
      * @dev Check only deep if the sender trusts an account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if the sender trusts accountToCheck.
      */
     function getIsTrustedOnlyDeep(address accountToCheck) external view returns (bool) {
         return getIsTrustedOnlyDeepByAccount(msg.sender, accountToCheck);
@@ -162,6 +168,7 @@ contract TrustedAccounts {
      * @dev Check only deep if the sender trusts multiple accounts.
      * @param account Account to be checked if it trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedOnlyDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
         results = new bool[](accountsToCheck.length);
@@ -173,6 +180,7 @@ contract TrustedAccounts {
     /**
      * @dev Check only deep if the sender trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedOnlyDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
         results = getIsTrustedOnlyDeepByAccountMultiple(msg.sender, accountsToCheck);
@@ -182,6 +190,7 @@ contract TrustedAccounts {
      * @dev Check deep if an account trusts another account.
      * @param account Account to be checked if it trusts another account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if account trusts accountToCheck.
      */
     function getIsTrustedDeepByAccount(address account, address accountToCheck) public view returns (bool) {
         // Check if the sender trusts account.
@@ -194,6 +203,7 @@ contract TrustedAccounts {
     /**
      * @dev Check deep if the sender trusts an account.
      * @param accountToCheck Account to be checked if it is trusted.
+     * @return True if the sender trusts accountToCheck.
      */
     function getIsTrustedDeep(address accountToCheck) external view returns (bool) {
         return getIsTrustedDeepByAccount(msg.sender, accountToCheck);
@@ -203,6 +213,7 @@ contract TrustedAccounts {
      * @dev Check deep if the sender trusts multiple accounts.
      * @param account Account to be checked if it trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
         results = new bool[](accountsToCheck.length);
@@ -214,6 +225,7 @@ contract TrustedAccounts {
     /**
      * @dev Check deep if the sender trusts multiple accounts.
      * @param accountsToCheck Accounts to be checked if they are trusted.
+     * @return Array of results.
      */
     function getIsTrustedDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
         results = getIsTrustedDeepByAccountMultiple(msg.sender, accountsToCheck);
