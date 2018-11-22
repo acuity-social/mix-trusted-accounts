@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 
 /**
@@ -122,7 +122,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+    function getIsTrustedByAccountMultiple(address account, address[] memory accountsToCheck) public view returns (bool[] memory results) {
         results = new bool[](accountsToCheck.length);
         for (uint i = 0; i < accountsToCheck.length; i++) {
             results[i] = accountTrustedAccount[account][accountsToCheck[i]];
@@ -134,7 +134,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedMultiple(address[] accountsToCheck) external view returns (bool[] results) {
+    function getIsTrustedMultiple(address[] calldata accountsToCheck) external view returns (bool[] memory results) {
         results = getIsTrustedByAccountMultiple(msg.sender, accountsToCheck);
     }
 
@@ -170,7 +170,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedOnlyDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+    function getIsTrustedOnlyDeepByAccountMultiple(address account, address[] memory accountsToCheck) public view returns (bool[] memory results) {
         results = new bool[](accountsToCheck.length);
         for (uint i = 0; i < accountsToCheck.length; i++) {
             results[i] = getIsTrustedOnlyDeepByAccount(account, accountsToCheck[i]);
@@ -182,7 +182,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedOnlyDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
+    function getIsTrustedOnlyDeepMultiple(address[] calldata accountsToCheck) external view returns (bool[] memory results) {
         results = getIsTrustedOnlyDeepByAccountMultiple(msg.sender, accountsToCheck);
     }
 
@@ -215,7 +215,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedDeepByAccountMultiple(address account, address[] accountsToCheck) public view returns (bool[] results) {
+    function getIsTrustedDeepByAccountMultiple(address account, address[] memory accountsToCheck) public view returns (bool[] memory results) {
         results = new bool[](accountsToCheck.length);
         for (uint i = 0; i < accountsToCheck.length; i++) {
             results[i] = getIsTrustedDeepByAccount(account, accountsToCheck[i]);
@@ -227,7 +227,7 @@ contract TrustedAccounts {
      * @param accountsToCheck Accounts to be checked if they are trusted.
      * @return Array of results.
      */
-    function getIsTrustedDeepMultiple(address[] accountsToCheck) external view returns (bool[] results) {
+    function getIsTrustedDeepMultiple(address[] calldata accountsToCheck) external view returns (bool[] memory results) {
         results = getIsTrustedDeepByAccountMultiple(msg.sender, accountsToCheck);
     }
 
@@ -243,7 +243,7 @@ contract TrustedAccounts {
      * @dev Get all accounts trusted by sender.
      * @return All accounts trusted by sender.
      */
-    function getAllTrusted() external view returns (address[]) {
+    function getAllTrusted() external view returns (address[] memory) {
         return accountTrustedAccountList[msg.sender];
     }
 
@@ -260,7 +260,7 @@ contract TrustedAccounts {
      * @param account Account to get accounts it trusts.
      * @return All accounts trusted by account.
      */
-    function getAllTrustedByAccount(address account) external view returns (address[]) {
+    function getAllTrustedByAccount(address account) external view returns (address[] memory) {
         return accountTrustedAccountList[account];
     }
 
@@ -270,7 +270,7 @@ contract TrustedAccounts {
      * @param accountToCheck Account to check who trusts it.
      * @return List of accounts that are trusted by account and trust accountToCheck.
      */
-    function getTrustedThatTrustAccountByAccount(address account, address accountToCheck) public view returns (address[] results) {
+    function getTrustedThatTrustAccountByAccount(address account, address accountToCheck) public view returns (address[] memory results) {
         uint trustedCount = accountTrustedAccountList[account].length;
         bool[] memory trustedTrust = new bool[](trustedCount);
         uint trustedTrustCount = 0;
@@ -287,7 +287,7 @@ contract TrustedAccounts {
         // Store the results.
         results = new address[](trustedTrustCount);
         uint j = 0;
-        for (i = 0; i < trustedCount; i++) {
+        for (uint i = 0; i < trustedCount; i++) {
             if (trustedTrust[i]) {
                 results[j++] = accountTrustedAccountList[account][i];
             }
@@ -299,7 +299,7 @@ contract TrustedAccounts {
      * @param accountToCheck Account to check who trusts it.
      * @return List of accounts that are trusted by sender and trust accountToCheck.
      */
-    function getTrustedThatTrustAccount(address accountToCheck) external view returns (address[] results) {
+    function getTrustedThatTrustAccount(address accountToCheck) external view returns (address[] memory results) {
         results = getTrustedThatTrustAccountByAccount(msg.sender, accountToCheck);
     }
 

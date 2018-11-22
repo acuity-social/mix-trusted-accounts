@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 import "ds-test/test.sol";
 
@@ -24,178 +24,178 @@ contract TrustedAccountsTest is DSTest {
     }
 
     function testControlCantTrustSelf() public {
-        trustedAccounts.trustAccount(0x1234);
+        trustedAccounts.trustAccount(address(0x1234));
     }
 
     function testFailCantTrustSelf() public {
-        trustedAccounts.trustAccount(this);
+        trustedAccounts.trustAccount(address(this));
     }
 
     function testControlCantTrustTrusted() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.trustAccount(0x2345);
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.trustAccount(address(0x2345));
     }
 
     function testFailCantTrustTrusted() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.trustAccount(0x1234);
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.trustAccount(address(0x1234));
     }
 
     function testTrustAccount() public {
-        trustedAccounts.trustAccount(0x1234);
+        trustedAccounts.trustAccount(address(0x1234));
         assertEq(trustedAccounts.getTrustedCount(), 1);
-        assertTrue(trustedAccounts.getIsTrusted(0x1234));
-        trustedAccounts.trustAccount(0x2345);
+        assertTrue(trustedAccounts.getIsTrusted(address(0x1234)));
+        trustedAccounts.trustAccount(address(0x2345));
         assertEq(trustedAccounts.getTrustedCount(), 2);
-        assertTrue(trustedAccounts.getIsTrusted(0x2345));
-        trustedAccounts.trustAccount(0x4567);
+        assertTrue(trustedAccounts.getIsTrusted(address(0x2345)));
+        trustedAccounts.trustAccount(address(0x4567));
         assertEq(trustedAccounts.getTrustedCount(), 3);
-        assertTrue(trustedAccounts.getIsTrusted(0x4567));
-        trustedAccounts.trustAccount(0x5678);
+        assertTrue(trustedAccounts.getIsTrusted(address(0x4567)));
+        trustedAccounts.trustAccount(address(0x5678));
         assertEq(trustedAccounts.getTrustedCount(), 4);
-        assertTrue(trustedAccounts.getIsTrusted(0x5678));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x5678)));
     }
 
     function testControlCantUntrustUntrusted() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.untrustAccount(0x1234);
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.untrustAccount(address(0x1234));
     }
 
     function testFailCantUntrustUntrusted() public {
-        trustedAccounts.untrustAccount(0x1234);
+        trustedAccounts.untrustAccount(address(0x1234));
     }
 
     function testUntrustAccount() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.trustAccount(0x2345);
-        trustedAccounts.trustAccount(0x4567);
-        trustedAccounts.trustAccount(0x5678);
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.trustAccount(address(0x2345));
+        trustedAccounts.trustAccount(address(0x4567));
+        trustedAccounts.trustAccount(address(0x5678));
 
-        trustedAccounts.untrustAccount(0x2345);
+        trustedAccounts.untrustAccount(address(0x2345));
         assertEq(trustedAccounts.getTrustedCount(), 3);
-        assertTrue(trustedAccounts.getIsTrusted(0x1234));
-        assertTrue(!trustedAccounts.getIsTrusted(0x2345));
-        assertTrue(trustedAccounts.getIsTrusted(0x4567));
-        assertTrue(trustedAccounts.getIsTrusted(0x5678));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x4567)));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x5678)));
 
-        trustedAccounts.untrustAccount(0x5678);
+        trustedAccounts.untrustAccount(address(0x5678));
         assertEq(trustedAccounts.getTrustedCount(), 2);
-        assertTrue(trustedAccounts.getIsTrusted(0x1234));
-        assertTrue(!trustedAccounts.getIsTrusted(0x2345));
-        assertTrue(trustedAccounts.getIsTrusted(0x4567));
-        assertTrue(!trustedAccounts.getIsTrusted(0x5678));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x4567)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x5678)));
 
-        trustedAccounts.untrustAccount(0x1234);
+        trustedAccounts.untrustAccount(address(0x1234));
         assertEq(trustedAccounts.getTrustedCount(), 1);
-        assertTrue(!trustedAccounts.getIsTrusted(0x1234));
-        assertTrue(!trustedAccounts.getIsTrusted(0x2345));
-        assertTrue(trustedAccounts.getIsTrusted(0x4567));
-        assertTrue(!trustedAccounts.getIsTrusted(0x5678));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrusted(address(0x4567)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x5678)));
 
-        trustedAccounts.untrustAccount(0x4567);
+        trustedAccounts.untrustAccount(address(0x4567));
         assertEq(trustedAccounts.getTrustedCount(), 0);
-        assertTrue(!trustedAccounts.getIsTrusted(0x1234));
-        assertTrue(!trustedAccounts.getIsTrusted(0x2345));
-        assertTrue(!trustedAccounts.getIsTrusted(0x4567));
-        assertTrue(!trustedAccounts.getIsTrusted(0x5678));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x4567)));
+        assertTrue(!trustedAccounts.getIsTrusted(address(0x5678)));
     }
 
     function testGetIsTrustedByAccount() public {
-        trustedAccountsProxy.trustAccount(0x1234);
-        assertTrue(!trustedAccounts.getIsTrustedByAccount(msg.sender, 0x1234));
-        assertTrue(trustedAccounts.getIsTrustedByAccount(trustedAccountsProxy, 0x1234));
+        trustedAccountsProxy.trustAccount(address(0x1234));
+        assertTrue(!trustedAccounts.getIsTrustedByAccount(msg.sender, address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedByAccount(address(trustedAccountsProxy), address(0x1234)));
     }
 
     function testGetIsTrustedDeep() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.trustAccount(0x2345);
-        trustedAccountsProxy.trustAccount(0x3456);
-        trustedAccountsProxy.trustAccount(0x4567);
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedDeep(0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedDeep(0x4567));
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy.trustAccount(address(0x4567));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(address(0x4567)));
 
-        trustedAccounts.trustAccount(trustedAccountsProxy);
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x2345));
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x3456));
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x4567));
+        trustedAccounts.trustAccount(address(trustedAccountsProxy));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x3456)));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x4567)));
 
-        trustedAccounts.untrustAccount(trustedAccountsProxy);
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeep(0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedDeep(0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedDeep(0x4567));
+        trustedAccounts.untrustAccount(address(trustedAccountsProxy));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeep(address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedDeep(address(0x4567)));
     }
 
     function testGetIsTrustedDeepByAccount() public {
-        trustedAccountsProxy2.trustAccount(0x1234);
-        trustedAccountsProxy2.trustAccount(0x2345);
-        trustedAccountsProxy.trustAccount(0x3456);
-        trustedAccountsProxy.trustAccount(0x4567);
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.trustAccount(address(0x1234));
+        trustedAccountsProxy2.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy.trustAccount(address(0x4567));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
 
-        trustedAccountsProxy2.trustAccount(trustedAccountsProxy);
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.trustAccount(address(trustedAccountsProxy));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
 
-        trustedAccountsProxy2.untrustAccount(trustedAccountsProxy);
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.untrustAccount(address(trustedAccountsProxy));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
     }
 
     function testGetIsTrustedOnlyDeep() public {
-        trustedAccounts.trustAccount(0x1234);
-        trustedAccounts.trustAccount(0x2345);
-        trustedAccountsProxy.trustAccount(0x3456);
-        trustedAccountsProxy.trustAccount(0x4567);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x4567));
+        trustedAccounts.trustAccount(address(0x1234));
+        trustedAccounts.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy.trustAccount(address(0x4567));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x4567)));
 
-        trustedAccounts.trustAccount(trustedAccountsProxy);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x2345));
-        assertTrue(trustedAccounts.getIsTrustedOnlyDeep(0x3456));
-        assertTrue(trustedAccounts.getIsTrustedOnlyDeep(0x4567));
+        trustedAccounts.trustAccount(address(trustedAccountsProxy));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrustedOnlyDeep(address(0x3456)));
+        assertTrue(trustedAccounts.getIsTrustedOnlyDeep(address(0x4567)));
 
-        trustedAccounts.untrustAccount(trustedAccountsProxy);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(0x4567));
+        trustedAccounts.untrustAccount(address(trustedAccountsProxy));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeep(address(0x4567)));
     }
 
     function testGetIsTrustedOnlyDeepByAccount() public {
-        trustedAccountsProxy2.trustAccount(0x1234);
-        trustedAccountsProxy2.trustAccount(0x2345);
-        trustedAccountsProxy.trustAccount(0x3456);
-        trustedAccountsProxy.trustAccount(0x4567);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.trustAccount(address(0x1234));
+        trustedAccountsProxy2.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy.trustAccount(address(0x4567));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
 
-        trustedAccountsProxy2.trustAccount(trustedAccountsProxy);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.trustAccount(address(trustedAccountsProxy));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
 
-        trustedAccountsProxy2.untrustAccount(trustedAccountsProxy);
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x1234));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x2345));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x3456));
-        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(trustedAccountsProxy2, 0x4567));
+        trustedAccountsProxy2.untrustAccount(address(trustedAccountsProxy));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x1234)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x2345)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x3456)));
+        assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
     }
 
 }
