@@ -89,7 +89,7 @@ contract TrustedAccounts {
                   trustedList[i] = trustedList[trustedList.length - 1];
                 }
                 // Remove the last account.
-                trustedList.length--;
+                trustedList.pop();
                 break;
             }
         }
