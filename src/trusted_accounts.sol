@@ -9,14 +9,14 @@ pragma solidity ^0.5.0;
 contract TrustedAccounts {
 
     /**
-     * @dev Mapping of account1 to mapping of account2 to whether account1 trusts account2.
-     */
-    mapping (address => mapping(address => bool)) accountTrustedAccount;
-
-    /**
      * @dev Mapping of account to array of trusted accounts.
      */
     mapping (address => address[]) accountTrustedAccountList;
+
+    /**
+     * @dev Mapping of account1 to mapping of account2 to index + 1 in accountTrustedAccountList.
+     */
+    mapping (address => mapping(address => uint)) accountTrustedAccountIndex;
 
     /**
      * @dev An account now trusts another account.
@@ -37,7 +37,7 @@ contract TrustedAccounts {
      * @param account Account that must be trusted.
      */
     modifier isTrusted(address account) {
-        require (accountTrustedAccount[msg.sender][account]);
+        require (accountTrustedAccountIndex[msg.sender][account] > 0);
         _;
     }
 
@@ -55,7 +55,7 @@ contract TrustedAccounts {
      * @param account Account that must not be trusted.
      */
     modifier isNotTrusted(address account) {
-        require (!accountTrustedAccount[msg.sender][account]);
+        require (accountTrustedAccountIndex[msg.sender][account] == 0);
         _;
     }
 
@@ -64,10 +64,12 @@ contract TrustedAccounts {
      * @param account Account to be trusted by sender.
      */
     function trustAccount(address account) external isNotSender(account) isNotTrusted(account) {
-        // Record the sender as trusting this account.
-        accountTrustedAccount[msg.sender][account] = true;
-        // Add the account to the list of accounts the sender trusts.
-        accountTrustedAccountList[msg.sender].push(account);
+        // Get the list of trusted accounts for sender.
+        address[] storage trustedList = accountTrustedAccountList[msg.sender];
+        // Add the new account to the list of accounts.
+        trustedList.push(account);
+        // Record the index + 1.
+        accountTrustedAccountIndex[msg.sender][account] = trustedList.length;
         // Log the trusting of the account.
         emit TrustAccount(msg.sender, account);
     }
@@ -77,22 +79,22 @@ contract TrustedAccounts {
      * @param account Account to not be trusted by sender.
      */
     function untrustAccount(address account) external isTrusted(account) {
-        // Record the sender as not trusting this account.
-        delete accountTrustedAccount[msg.sender][account];
-        // Find the account in the senders list of trusted accounts.
+        // Get the list of trusted accounts for sender.
         address[] storage trustedList = accountTrustedAccountList[msg.sender];
-        for (uint i = 0; i < trustedList.length; i++) {
-            if (trustedList[i] == account) {
-                // Check if this is not the last account.
-                if (i != trustedList.length - 1) {
-                  // Overwrite the account with the last account.
-                  trustedList[i] = trustedList[trustedList.length - 1];
-                }
-                // Remove the last account.
-                trustedList.pop();
-                break;
-            }
+        // Get the mapping of trusted account indexes for sender.
+        mapping(address => uint) storage trustedAccountIndex = accountTrustedAccountIndex[msg.sender];
+        // Get the index + 1 of the account to be removed and delete it from state.
+        uint i = trustedAccountIndex[account];
+        delete trustedAccountIndex[account];
+        // Check if this is not the last account.
+        if (i != trustedList.length) {
+          // Overwrite the account with the last account.
+          address accountMoving = trustedList[trustedList.length - 1];
+          trustedList[i - 1] = accountMoving;
+          trustedAccountIndex[accountMoving] = i;
         }
+        // Remove the last account.
+        trustedList.pop();
         // Log the untrusting of account.
         emit UntrustAccount(msg.sender, account);
     }
@@ -104,7 +106,7 @@ contract TrustedAccounts {
      * @return True if account trusts accountToCheck.
      */
     function getIsTrustedByAccount(address account, address accountToCheck) public view returns (bool) {
-        return accountTrustedAccount[account][accountToCheck];
+        return accountTrustedAccountIndex[account][accountToCheck] > 0;
     }
 
     /**
@@ -113,7 +115,7 @@ contract TrustedAccounts {
      * @return True if sender trusts accountToCheck.
      */
     function getIsTrusted(address accountToCheck) external view returns (bool) {
-        return accountTrustedAccount[msg.sender][accountToCheck];
+        return accountTrustedAccountIndex[msg.sender][accountToCheck] > 0;
     }
 
     /**
@@ -125,7 +127,7 @@ contract TrustedAccounts {
     function getIsTrustedByAccountMultiple(address account, address[] memory accountsToCheck) public view returns (bool[] memory results) {
         results = new bool[](accountsToCheck.length);
         for (uint i = 0; i < accountsToCheck.length; i++) {
-            results[i] = accountTrustedAccount[account][accountsToCheck[i]];
+            results[i] = accountTrustedAccountIndex[account][accountsToCheck[i]] > 0;
         }
     }
 
@@ -148,7 +150,7 @@ contract TrustedAccounts {
         // Check all the accounts trusted by account.
         address[] storage trustedList = accountTrustedAccountList[account];
         for (uint i = 0; i < trustedList.length; i++) {
-            if (accountTrustedAccount[trustedList[i]][accountToCheck]) {
+            if (accountTrustedAccountIndex[trustedList[i]][accountToCheck] > 0) {
                 return true;
             }
         }
@@ -194,7 +196,7 @@ contract TrustedAccounts {
      */
     function getIsTrustedDeepByAccount(address account, address accountToCheck) public view returns (bool) {
         // Check if the sender trusts account.
-        if (accountTrustedAccount[account][accountToCheck]) {
+        if (accountTrustedAccountIndex[account][accountToCheck] > 0) {
             return true;
         }
         return getIsTrustedOnlyDeepByAccount(account, accountToCheck);
