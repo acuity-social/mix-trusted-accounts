@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "./trusted_accounts.sol";
+import "./TrustedAccounts.sol";
 
 
 /**

@@ -2,8 +2,8 @@ pragma solidity ^0.5.0;
 
 import "ds-test/test.sol";
 
-import "./trusted_accounts.sol";
-import "./trusted_accounts_proxy.sol";
+import "./TrustedAccounts.sol";
+import "./TrustedAccountsProxy.sol";
 
 
 /**
