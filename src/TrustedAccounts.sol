@@ -278,7 +278,7 @@ contract TrustedAccounts {
         uint trustedTrustCount = 0;
         // Check which accounts that account trusts trust accountToCheck.
         for (uint i = 0; i < trustedCount; i++) {
-            if (getIsTrustedByAccount(accountTrustedAccountList[account][i], accountToCheck)) {
+            if (getIsTrustedByAccount(accountTrustedAccountList[account][i], accountToCheck)) { // optimize me
                 trustedTrust[i] = true;
                 trustedTrustCount++;
             }
@@ -291,7 +291,7 @@ contract TrustedAccounts {
         uint j = 0;
         for (uint i = 0; i < trustedCount; i++) {
             if (trustedTrust[i]) {
-                results[j++] = accountTrustedAccountList[account][i];
+                results[j++] = accountTrustedAccountList[account][i]; // optimize me
             }
         }
     }
