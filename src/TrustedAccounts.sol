@@ -273,17 +273,15 @@ contract TrustedAccounts {
      * @return List of accounts that are trusted by account and trust accountToCheck.
      */
     function getTrustedThatTrustAccountByAccount(address account, address accountToCheck) public view returns (address[] memory results) {
-        uint trustedCount = accountTrustedAccountList[account].length;
+        address[] storage trusted = accountTrustedAccountList[account];
+        uint trustedCount = trusted.length;
         bool[] memory trustedTrust = new bool[](trustedCount);
         uint trustedTrustCount = 0;
         // Check which accounts that account trusts trust accountToCheck.
         for (uint i = 0; i < trustedCount; i++) {
-            if (getIsTrustedByAccount(accountTrustedAccountList[account][i], accountToCheck)) { // optimize me
+            if (getIsTrustedByAccount(trusted[i], accountToCheck)) {
                 trustedTrust[i] = true;
                 trustedTrustCount++;
-            }
-            else {
-                trustedTrust[i] = false;
             }
         }
         // Store the results.
@@ -291,7 +289,7 @@ contract TrustedAccounts {
         uint j = 0;
         for (uint i = 0; i < trustedCount; i++) {
             if (trustedTrust[i]) {
-                results[j++] = accountTrustedAccountList[account][i]; // optimize me
+                results[j++] = trusted[i];
             }
         }
     }
