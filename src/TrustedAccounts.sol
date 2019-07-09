@@ -37,7 +37,7 @@ contract TrustedAccounts {
      * @param account Account that must be trusted.
      */
     modifier isTrusted(address account) {
-        require (accountTrustedAccountIndex[msg.sender][account] > 0);
+        require (accountTrustedAccountIndex[msg.sender][account] > 0, "Account is not trusted by sender.");
         _;
     }
 
@@ -46,7 +46,7 @@ contract TrustedAccounts {
      * @param account Account that must not be the sender.
      */
     modifier isNotSender(address account) {
-        require (account != msg.sender);
+        require (account != msg.sender, "Account is sender.");
         _;
     }
 
@@ -55,7 +55,7 @@ contract TrustedAccounts {
      * @param account Account that must not be trusted.
      */
     modifier isNotTrusted(address account) {
-        require (accountTrustedAccountIndex[msg.sender][account] == 0);
+        require (accountTrustedAccountIndex[msg.sender][account] == 0, "Account is trusted by sender.");
         _;
     }
 
