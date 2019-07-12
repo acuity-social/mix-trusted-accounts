@@ -198,4 +198,112 @@ contract TrustedAccountsTest is DSTest {
         assertTrue(!trustedAccounts.getIsTrustedOnlyDeepByAccount(address(trustedAccountsProxy2), address(0x4567)));
     }
 
+    function testGetTrustedThatTrustAccountByAccount() public {
+        trustedAccountsProxy.trustAccount(address(0x1234));
+        trustedAccountsProxy.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy2.trustAccount(address(0x3456));
+        trustedAccountsProxy2.trustAccount(address(0x4567));
+        trustedAccountsProxy2.trustAccount(address(0x5678));
+        trustedAccountsProxy2.trustAccount(address(0x789a));
+
+        address[] memory accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x3456));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x5678));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x789a));
+        assertEq(accounts.length, 0);
+
+        trustedAccounts.trustAccount(address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x3456));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x5678));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x789a));
+        assertEq(accounts.length, 0);
+
+        trustedAccounts.trustAccount(address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x3456));
+        assertEq(accounts.length, 2);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        assertEq(accounts[1], address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x5678));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccountByAccount(address(this), address(0x789a));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy2));
+    }
+
+    function testGetTrustedThatTrustAccount() public {
+        trustedAccountsProxy.trustAccount(address(0x1234));
+        trustedAccountsProxy.trustAccount(address(0x2345));
+        trustedAccountsProxy.trustAccount(address(0x3456));
+        trustedAccountsProxy2.trustAccount(address(0x3456));
+        trustedAccountsProxy2.trustAccount(address(0x4567));
+        trustedAccountsProxy2.trustAccount(address(0x5678));
+        trustedAccountsProxy2.trustAccount(address(0x789a));
+
+        address[] memory accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x3456));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x5678));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x789a));
+        assertEq(accounts.length, 0);
+
+        trustedAccounts.trustAccount(address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x3456));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x5678));
+        assertEq(accounts.length, 0);
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x789a));
+        assertEq(accounts.length, 0);
+
+        trustedAccounts.trustAccount(address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x1234));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x3456));
+        assertEq(accounts.length, 2);
+        assertEq(accounts[0], address(trustedAccountsProxy));
+        assertEq(accounts[1], address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x5678));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy2));
+        accounts = trustedAccounts.getTrustedThatTrustAccount(address(0x789a));
+        assertEq(accounts.length, 1);
+        assertEq(accounts[0], address(trustedAccountsProxy2));
+    }
+
 }
