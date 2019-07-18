@@ -2,11 +2,11 @@ pragma solidity ^0.5.10;
 
 
 /**
- * @title TrustedAccounts
+ * @title MixTrustedAccounts
  * @author Jonathan Brown <jbrown@mix-blockchain.org>
- * @dev Smart contract for each account to maintain a public list of trusted accounts.
+ * @dev Enables each account to maintain a public list of trusted accounts.
  */
-contract TrustedAccounts {
+contract MixTrustedAccounts {
 
     /**
      * @dev Mapping of account to array of trusted accounts.
